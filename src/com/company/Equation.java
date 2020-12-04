@@ -129,32 +129,32 @@ public class Equation {
         beta[0] = u[0];
         alpha[num] = 0;
         beta[num] = u[u.length - 1];
-        la = (int) floor((x0 - xInit) / h);                   // точка la до точки разрыва
-        lb = la + 1;                                  // точка lb с другой стороны от разрыва
+        la = (int) floor((x0 - xInit) / h);  // position of the last dot before before discontinuity
+        lb = la + 1;  // position of the first dot after discontinuity
 
-        for (int l = 1; l < la; l++) {                                                   // прогонка от 0 до la
+        for (int l = 1; l < la; l++) {  // run forward from 1 to la - 1
             alpha[l] = -a1_mod(x0) / (b1_mod(x0) + c1_mod(x0) * alpha[l - 1]);
             beta[l] = (d1_mod(x0) - c1_mod(x0) * beta[l - 1]) / (b1_mod(x0) + c1_mod(x0) * alpha[l - 1]);
         }
-        for (int l = num - 1; l > lb; l--) {                                              // прогонка от 1 до lb
+        for (int l = num - 1; l > lb; l--) {  // run forward from num - 1 to lb - 1
             alpha[l] = -c2_mod(x0) / (b2_mod(x0) + a2_mod(x0) * alpha[l + 1]);
             beta[l] = (d2_mod(x0) - a2_mod(x0) * beta[l + 1]) / (b2_mod(x0) + a2_mod(x0) * alpha[l + 1]);
         }
 
-        uBuf = (k1(x0) * beta[la - 1] + k2(x0) * beta[lb + 1])
-                / (k1(x0) * (1 - alpha[la - 1]) + k2(x0) * (1 - alpha[lb + 1]));   // u(la) = u(lb)
-        for (int l = la - 1; l >= 1; l--) {                                                  // обратная прогонка от u(la) до u(0+0)
+        uBuf = (k1(x0) * beta[la - 1] + k2(x0) * beta[lb + 1])  // u(x0-0) = u(x0+0)
+                / (k1(x0) * (1 - alpha[la - 1]) + k2(x0) * (1 - alpha[lb + 1]));  // u(la) = u(lb) = uBuf
+        for (int l = la - 1; l >= 1; l--) {  // run backward from u(x0-0) to u(0+0)
             uBuf = alpha[l] * uBuf + beta[l];
-            if (l % n == 0) {                                                          // запись одной из 11-ти точек
+            if (l % n == 0) {  // write one of [num] dots
                 u[l / n] = uBuf;
             }
         }
 
-        uBuf = (k1(x0) * beta[la - 1] + k2(x0) * beta[lb + 1])
-                / (k1(x0) * (1 - alpha[la - 1]) + k2(x0) * (1 - alpha[lb + 1]));   // u(lb) = u(la)
-        for (int l = lb + 1; l <= num - 1; l++) {                                             // обратная прогонка от u(lb) до (1-0)
+        uBuf = (k1(x0) * beta[la - 1] + k2(x0) * beta[lb + 1])  // u(x0-0) = u(x0+0)
+                / (k1(x0) * (1 - alpha[la - 1]) + k2(x0) * (1 - alpha[lb + 1]));  // u(lb) = u(la) = uBuf
+        for (int l = lb + 1; l <= num - 1; l++) {  // run backward from u(x0+0) to u(1-0)
             uBuf = alpha[l] * uBuf + beta[l];
-            if (l % n == 0) {                                                          // запись одной из 11-ти точек
+            if (l % n == 0) {  // write one of [num] dots
                 u[l / n] = uBuf;
             }
         }
@@ -174,36 +174,36 @@ public class Equation {
         beta[0] = u[0];
         alpha[num] = 0;
         beta[num] = u[u.length - 1];
-        la = (int) floor((x0 - xInit) / h);                   // точка la до точки разрыва
-        lb = la + 1;                                  // точка lb с другой стороны от разрыва
+        la = (int) floor((x0 - xInit) / h);  // position of the last dot before before discontinuity
+        lb = la + 1;  // position of the first dot after discontinuity
         xa = xInit + h * la;
         xb = xInit + h * lb;
 
-        for (int l = 1; l < la; l++) {                                                   // прогонка от 0 до la
+        for (int l = 1; l < la; l++) {  // run forward from 1 to la - 1
             x = xInit + h * l;
             alpha[l] = -a1(x) / (b1(x) + c1(x) * alpha[l - 1]);
             beta[l] = (d1(x) - c1(x) * beta[l - 1]) / (b1(x) + c1(x) * alpha[l - 1]);
         }
-        for (int l = num - 1; l > lb; l--) {                                              // прогонка от 1 до lb
+        for (int l = num - 1; l > lb; l--) {  // run forward from num - 1 to lb - 1
             x = xInit + h * l;
             alpha[l] = -c2(x) / (b2(x) + a2(x) * alpha[l + 1]);
             beta[l] = (d2(x) - a2(x) * beta[l + 1]) / (b2(x) + a2(x) * alpha[l + 1]);
         }
 
-        uBuf = (k1(xa) * beta[la - 1] + k2(xb) * beta[lb + 1])
-                / (k1(xa) * (1 - alpha[la - 1]) + k2(xb) * (1 - alpha[lb + 1]));   // u(la) = u(lb)
-        for (int l = la - 1; l >= 1; l--) {                                                  // обратная прогонка от u(la) до u(0+0)
+        uBuf = (k1(xa) * beta[la - 1] + k2(xb) * beta[lb + 1])  // u(x0-0) = u(x0+0)
+                / (k1(xa) * (1 - alpha[la - 1]) + k2(xb) * (1 - alpha[lb + 1]));   // u(la) = u(lb) = uBuf
+        for (int l = la - 1; l >= 1; l--) {  // run backward from u(x0-0) to u(0+0)
             uBuf = alpha[l] * uBuf + beta[l];
-            if (l % n == 0) {                                                          // запись одной из 11-ти точек
+            if (l % n == 0) {  // write one of [num] dots
                 u[l / n] = uBuf;
             }
         }
 
         uBuf = (k1(xa) * beta[la - 1] + k2(xb) * beta[lb + 1])
                 / (k1(xa) * (1 - alpha[la - 1]) + k2(xb) * (1 - alpha[lb + 1]));   // u(lb) = u(la)
-        for (int l = lb + 1; l <= num - 1; l++) {                                             // обратная прогонка от u(lb) до (1-0)
+        for (int l = lb + 1; l <= num - 1; l++) {  // run backward from u(x0+0) to u(1-0)
             uBuf = alpha[l] * uBuf + beta[l];
-            if (l % n == 0) {                                                          // запись одной из 11-ти точек
+            if (l % n == 0) {  // write one of [num] dots
                 u[l / n] = uBuf;
             }
         }
