@@ -1,6 +1,5 @@
 package com.company;
 
-import static java.lang.System.*;
 import static java.lang.Math.*;
 
 public class Solution {
@@ -15,8 +14,8 @@ public class Solution {
     private final double uEnd;
     private final double error;
     private final double limit;
-    private Equation equation1;
-    private Equation equation2;
+    private final Equation equation1;
+    private final Equation equation2;
 
     public Solution(double xInit,
                     double xEnd,
@@ -51,7 +50,7 @@ public class Solution {
     }
 
     // calculate solution of model task using TMA
-    public void calc_mod() {
+    public void calc_mod() throws TmaException {
         int i = 0;
         equation1.init_grid(num, h);
         equation2.init_grid(num, h);
@@ -64,11 +63,11 @@ public class Solution {
             i += 1;
         }
         if (i == limit)
-            out.println("Accuracy is not achieved, increase the limit!");
+            throw new TmaException("Accuracy is not achieved, increase the limit!");
     }
 
     // calculate solution of primary task using TMA
-    public void calc() {
+    public void calc() throws TmaException {
         int i = 0;
         equation1.init_grid(num, h);
         equation2.init_grid(num, h);
@@ -81,7 +80,7 @@ public class Solution {
             i += 1;
         }
         if (i == limit)
-            out.println("Accuracy is not achieved, increase the limit!");
+            throw new TmaException("Accuracy is not achieved, increase the limit!");
     }
 
     // analytical solution of model task
